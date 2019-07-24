@@ -23,9 +23,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cpp\include\HikingTeamTest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cpp\include\gtest\gtest.h">
       <Filter>Header Files</Filter>
     </ClInclude>

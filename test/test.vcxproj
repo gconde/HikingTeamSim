@@ -137,7 +137,6 @@
   <ItemGroup>
     <ClInclude Include="..\cpp\include\HikingSimException.h" />
     <ClInclude Include="cpp\include\gtest\gtest.h" />
-    <ClInclude Include="cpp\include\HikingTeamTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
