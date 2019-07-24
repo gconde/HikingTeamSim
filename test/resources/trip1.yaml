@@ -1,0 +1,17 @@
+---
+# lists of stuff
+bridges: ['bridge1', 'bridge2', 'bridge3']
+hikers: ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+# hiker details
+a: {name: Adam, speed: 100}
+b: {name: Bob, speed: 50}
+c: {name: Cathy, speed: 20}
+d: {name: Diane, speed: 10}
+e: {name: Ed, speed: 2.5}
+f: {name: Fred, speed: 25}
+g: {name: Gina, speed: 15}
+# bridge setups
+bridge1: {length: 100, hikers: ['a', 'b', 'c', 'd']}
+bridge2: {length: 250, hikers: ['e']}
+bridge3: {length: 150, hikers: ['f', 'g']}
+---

@@ -1,0 +1,11 @@
+Windows Build
+-----------------------------------------------------------------------
+Build with Visual Studio 2017 with Release/x64 configuration. Then run 
+test.bat from the command line. 
+
+Acknowledgment
+-----------------------------------------------------------------------
+yaml-cpp 0.62       https://github.com/jbeder/yaml-cpp
+googletest 1.8.1    https://github.com/google/googletest
+
+See "3rdParty Licenses" for complete license for above software.

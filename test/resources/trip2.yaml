@@ -1,0 +1,13 @@
+---
+# lists of stuff
+bridges: ['wood_bridge', 'metal_bridge']
+hikers: ['martin', 'tabitha', 'rocky', 'sam']
+# hiker details
+martin: {name: Martin, speed: 10}
+tabitha: {name: Tabitha Bitumen, speed: 20}
+rocky: {name: Rocky, speed: 25}
+sam: {name: Samantha, speed: 15}
+# bridge setups
+wood_bridge: {length: 100, hikers: ['martin', 'tabitha']}
+metal_bridge: {length: 50, hikers: ['rocky' ,'sam']}
+---
