@@ -21,7 +21,7 @@ class SIMULATOR_API BadConfigException : public std::exception
 {
 public:
     BadConfigException(const char*);
-    virtual char const * what() const;
+    virtual char const * what() const noexcept;
 private:
     std::string msg_;
 };
@@ -30,7 +30,7 @@ class SIMULATOR_API BadParameterException : public std::exception
 {
 public:
     BadParameterException(const char*);
-    virtual char const * what() const;
+    virtual char const * what() const noexcept;
 private:
     std::string msg_;
 };

@@ -1,11 +1,20 @@
 Windows Build
 -----------------------------------------------------------------------
 Build with Visual Studio 2017 with Release/x64 configuration. Then run 
-test.bat from the command line. 
+test.bat from the command line.
+
+Linux Build
+-----------------------------------------------------------------------
+Build with gradle. It will detect and use gcc or clang compiler. Make
+sure the active compiler version supports C++11 (eg gcc 7). Then run
+test.sh. To build:
+./gradlew assembleRelease
 
 Acknowledgment
 -----------------------------------------------------------------------
 yaml-cpp 0.62       https://github.com/jbeder/yaml-cpp
 googletest 1.8.1    https://github.com/google/googletest
+gradle 6.0.1        https://gradle.org/
 
 See "3rdParty Licenses" for complete license for above software.
+

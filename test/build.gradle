@@ -1,0 +1,43 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+plugins {
+    id 'cpp-application'
+}
+
+group = 'com.github.gconde'
+version = '1.0'
+
+application {
+    dependencies {
+        implementation project(':HikingTeamSim')
+    }
+    targetMachines = [machines.linux.x86_64, machines.windows.x86_64]
+    source.from file('cpp/src')
+    privateHeaders.from file('cpp/include')
+    binaries.configureEach {
+        if (toolChain instanceof Gcc && targetMachine.operatingSystemFamily.linux) {
+            linkTask.get().linkerArgs.add("-lpthread")
+        }
+    }
+}
+
+tasks.withType(CppCompile).configureEach {
+    // Define a preprocessor macro for every binary
+    if (Os.isFamily(Os.FAMILY_WINDOWS))
+    {
+        macros.put('_UNICODE', '')
+        macros.put('UNICODE', '')
+    }
+
+    // Define toolchain-specific compiler options
+    compilerArgs.addAll toolChain.map { toolChain ->
+        if (toolChain in [ Gcc, Clang ]) {
+            return ['-O3', '-c', '-Wall', '-pthread']
+        } else if (toolChain in VisualCpp) {
+            return ['/Zi', '/EHsc', '/GS', '/GL', '/W3', '/Gy', '/Zc:wchar_t', '/Gm-', '/O2', '/sdl', '/Zc:inline', '/fp:precise', '/errorReport:prompt', '/WX-', '/Zc:forScope', '/Gd', '/Oi', '/MD', '/FC', '/nologo', '/diagnostics:classic']
+        }
+        return []
+    }
+}
+
+
