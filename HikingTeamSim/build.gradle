@@ -44,11 +44,3 @@ tasks.withType(CppCompile).configureEach {
     }
 }
 
-tasks.withType(LinkSharedLibrary).configureEach {
-    linkerArgs.addAll toolChain.map { toolChain ->
-        if (toolChain in [ Gcc, Clang ]) {
-            return ['-pthread']
-        }
-        return []
-    }
-}
