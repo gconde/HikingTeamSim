@@ -1,9 +1,4 @@
-#include <fstream>
 #include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <vector>
-#include <stddef.h>
 
 #include "Simulator.h"
 #include "YamlLoader.h"
@@ -12,6 +7,8 @@
 
 std::string yamlFile1;
 std::string yamlFile2;
+
+using namespace TorchAndBridge;
 
 int main(int argc, char *argv[]) {
     if (argc < 2)
@@ -50,11 +47,11 @@ TEST(HikerSimTest, YamlFile2)
     HikingSimulator hs;
     YamlLoader::LoadYaml(hs, yamlFile2);
     auto total = hs.GetTiming(times);
-    EXPECT_NEAR(24.83333f, total, .01f);
+    EXPECT_NEAR(24.5f, total, .01f);
     auto bridgeIt = times.find("wood_bridge");
     ASSERT_TRUE(bridgeIt != times.end());
     EXPECT_NEAR(10.f, bridgeIt->second , .01f);
     bridgeIt = times.find("metal_bridge");
     ASSERT_TRUE(bridgeIt != times.end());
-    EXPECT_NEAR(14.83333f, bridgeIt->second, .01f);
+    EXPECT_NEAR(14.5f, bridgeIt->second, .01f);
 }

@@ -7,6 +7,9 @@
 
 #include "HikingSimException.h"
 
+namespace TorchAndBridge
+{
+
 void YamlLoader::LoadYaml(HikingSimulator& hs, const std::string& yamlFile)
 {
     std::ifstream ifs(yamlFile);
@@ -26,12 +29,6 @@ void YamlLoader::LoadYaml(HikingSimulator& hs, const std::string& yamlFile)
         YAML::Node hiker_list = config["hikers"];
         std::vector<std::string> hiker_names;
         std::vector<std::string> bridge_names;
-        // get names of hikers (map) and bridges (vector)
-        // extract info and put into maps
-        // for each bridge in bridges
-        //  use math to figure out time
-        //  store time in the bridge info, keep a running sum
-        //  need to keep track of fastest hiker
         for (YAML::iterator nodeIt = hiker_list.begin(); nodeIt != hiker_list.end(); ++nodeIt)
         {
             check_node(config, nodeIt->as<std::string>());
@@ -83,5 +80,6 @@ void YamlLoader::check_node(YAML::Node node, const std::string& key)
         oss << "Missing YAML key: " << key << ".";
         throw BadConfigException(oss.str().c_str());
     }
+}
 
 }

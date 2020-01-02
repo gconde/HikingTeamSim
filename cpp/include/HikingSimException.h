@@ -14,6 +14,9 @@
 #define SIMULATOR_API
 #endif
 
+namespace TorchAndBridge
+{
+
 class SIMULATOR_API BadConfigException : public std::exception
 {
 public:
@@ -32,5 +35,5 @@ private:
     std::string msg_;
 };
 
-
+} //TorchAndBridge
 #endif //__HIKINGSIMULATOREXCEPTION_H__

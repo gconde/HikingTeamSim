@@ -1,16 +1,18 @@
 #include "Simulator.h"
 
 #include <sstream>
-#include<algorithm>
-#include<iterator> 
+#include <algorithm>
 
 #include "HikingSimException.h"
+
+namespace TorchAndBridge
+{
 
 void HikingSimulator::AddBridge(std::string name, double length)
 {
     Bridge bridge;
-    bridge.name = name;
-    bridge.length = length;
+    bridge.name_ = name;
+    bridge.length_ = length;
     bridges_.push_back(bridge);
     if (bridgeNameToIndex_.find(name) != bridgeNameToIndex_.end())
     {
@@ -23,10 +25,6 @@ void HikingSimulator::AddBridge(std::string name, double length)
 
 void HikingSimulator::AddHiker(std::string name, double speed, const std::string& bridge)
 {
-    Hiker hiker;
-    hiker.name = name;
-    hiker.speed = speed;
-    hikers_.insert(std::make_pair(name, hiker));
     if (bridgeNameToIndex_.find(bridge) == bridgeNameToIndex_.end())
     {
         std::ostringstream oss;
@@ -34,90 +32,45 @@ void HikingSimulator::AddHiker(std::string name, double speed, const std::string
         throw BadParameterException(oss.str().c_str());
     }
     int index = bridgeNameToIndex_.find(bridge)->second;
-    bridges_.at(index).hikers.push_back(name);
-    int fastest_index = bridges_[index].fastest_hiker_index;
-    std::string fast_name = bridges_[index].hikers.at(fastest_index);
-    double fastest_speed = speed;
-    if (hikers_.find(fast_name) != hikers_.end())
-        fastest_speed = hikers_.find(fast_name)->second.speed;
-    if (speed > fastest_speed)
-    {
-        bridges_[index].fastest_hiker_index = bridges_[index].hikers.size() - 1;
-    }
-}
-
-std::map<std::string, HikingSimulator::Hiker>::const_iterator HikingSimulator::FastestHiker(const HikingSimulator::Bridge& bridge) const
-{
-    if (bridge.hikers.empty())
-        return hikers_.end();
-    return hikers_.find(bridge.hikers[bridge.fastest_hiker_index]);
-}
-
-int HikingSimulator::FastestHikerSpeed(const HikingSimulator::Bridge& bridge) const
-{
-    if (bridge.hikers.empty() || FastestHiker(bridge) == hikers_.end())
-        return 0;
-    return FastestHiker(bridge)->second.speed;
-}
-
-int HikingSimulator::HikerSpeed(const std::string& hiker) const
-{
-    if (hikers_.find(hiker) == hikers_.end())
-        return 0;
-    return hikers_.find(hiker)->second.speed;
+    bridges_.at(index).AddHiker(std::make_shared<Hiker>(name, speed));
 }
 
 double HikingSimulator::GetTiming(DoubleMap& timings)
 {
-    // for each bridge in bridges
-    //  use math to figure out time
-    //  store time in the map, keep a running sum
-    //  need to keep track of fastest hiker
-    std::vector<std::string> hiker_group;
-    int fastest_index = 0;
-    if (bridges_.size())
-    {   
-        bridges_.front().FastestFirst();
-    }
-    else
+    if (bridges_.empty())
     {
         throw BadConfigException("No bridges defined.");
     }
-    if (hikers_.empty())
-    {
-        throw BadConfigException("No hikers defined.");
-    }
     double total_time = 0.f;
+    auto prev_it = bridges_.end();
     for (auto bridgeIt = bridges_.begin(); bridgeIt != bridges_.end(); bridgeIt++)
     {
-        // keep a moving group
-        // move the fastest to beginning for ease
-        bridgeIt->FastestFirst();
-        int swap_index = hiker_group.size();
-        std::copy(bridgeIt->hikers.begin(), bridgeIt->hikers.end(), std::back_inserter(hiker_group));
-        if (!bridgeIt->hikers.empty() && FastestHikerSpeed(*bridgeIt) > HikerSpeed(hiker_group[0]))
+        if (prev_it != bridges_.end())
         {
-            std::swap(hiker_group[0], hiker_group[swap_index]);
+            bridgeIt->AddHikers(*prev_it);
         }
-        // calculate this segment
+        prev_it = bridgeIt;
+        bridgeIt->SortHikers();
+        std::vector<std::shared_ptr<Hiker>>& hiker_group = bridgeIt->hikers_;
         double segment_time = 0.f;
-        double fast_speed = HikerSpeed(hiker_group[0]);
-        if (hiker_group.size() == 1) // a lone hiker
+        if (hiker_group.size() > 0 && hiker_group.size() < 3)
         {
-            segment_time = bridgeIt->length / fast_speed;
+            segment_time = bridgeIt->length_ / hiker_group.back()->speed_;
         }
-        else
+        else if(hiker_group.size() > 0)
         {
-            // time for fastest hiker to walk slower people
-            for (int i = 1; i < hiker_group.size(); ++i)
+            for (int i = 1; i < hiker_group.size() - 2; ++i)
             {
-                segment_time += bridgeIt->length / HikerSpeed(hiker_group[i]);
+                segment_time += bridgeIt->length_ / hiker_group[i]->speed_;
             }
-            // time for fastest hiker to walk back
-            segment_time += bridgeIt->length * (hiker_group.size() - 2) / fast_speed;
+            segment_time += bridgeIt->length_ / hiker_group.back()->speed_ +
+                bridgeIt->length_ / hiker_group[1]->speed_ * 2 +
+                bridgeIt->length_ / hiker_group[0]->speed_ * (hiker_group.size() - 3);
         }
-        timings.insert(std::make_pair(bridgeIt->name, segment_time));
+        timings.insert(std::make_pair(bridgeIt->name_, segment_time));
         total_time += segment_time;
     }
     return total_time;
 }
+
+} //TorchAndBridge

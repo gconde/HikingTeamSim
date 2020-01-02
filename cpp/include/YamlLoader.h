@@ -14,6 +14,9 @@
 #include "Simulator.h"
 #include "yaml-cpp/yaml.h"
 
+namespace TorchAndBridge
+{
+
 class SIMULATOR_API YamlLoader
 {
 public:
@@ -22,4 +25,5 @@ private:
     static void check_node(YAML::Node node, const std::string& key);
 };
 
+} //TorchAndBridge
 #endif //__YAMLLOADER_H__

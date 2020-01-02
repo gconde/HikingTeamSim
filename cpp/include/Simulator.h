@@ -13,53 +13,75 @@
 
 #include <string>
 #include <map>
+#include <set>
 #include <vector>
 #include <algorithm>
+#include <memory>
 
 typedef std::map<std::string, std::string> StringMap;
 typedef std::map<std::string, double> DoubleMap;
+
+namespace TorchAndBridge
+{
 
 class SIMULATOR_API HikingSimulator
 {
 public:
     struct Hiker
     {
-        Hiker() : speed(0.f) {}
+        Hiker() : speed_(0.f) {}
+        Hiker(std::string name, double speed) : name_(name), speed_(speed) {}
 
-        std::string name; // yaml name
-        double speed; // ft/min
+        std::string name_; // yaml name
+        double speed_; // ft/min
+    };
+
+    struct HikerSortFunctor
+    {
+        bool operator()(std::shared_ptr<HikingSimulator::Hiker>& h1, std::shared_ptr<HikingSimulator::Hiker>& h2)
+        {
+            return h1->speed_ > h2->speed_;
+        }
     };
 
     struct Bridge
     {
-        Bridge() : fastest_hiker_index(0) {}
+        Bridge() : length_(0.f) {}
 
-        // put fastest person first
-        void FastestFirst() {
-            if (hikers.empty())
-                return;
-            std::swap(hikers[0], hikers[fastest_hiker_index]);
-            fastest_hiker_index = 0;
+        void SortHikers() { std::sort(hikers_.begin(), hikers_.end(), HikerSortFunctor()); }
+
+        void AddHiker(std::shared_ptr<Hiker> h)
+        {
+            if (hiker_names_.find(h->name_) == hiker_names_.end())
+            {
+                hikers_.push_back(h);
+                hiker_names_.insert(h->name_);
+            }
         }
 
-        std::string name; // yaml name
-        double length; // feet
-        std::vector<std::string> hikers;
-        int fastest_hiker_index;
+        void AddHikers(Bridge& bridge)
+        {
+            for (auto hikerIt = bridge.hikers_.begin(); hikerIt != bridge.hikers_.end(); hikerIt++)
+            {
+                AddHiker(*hikerIt);
+            }
+        }
+
+        std::string name_; // yaml name
+        double length_; // feet
+        std::vector<std::shared_ptr<Hiker>> hikers_;
+        std::set<std::string> hiker_names_;
     };
 
     void AddBridge(std::string name, double length);
     void AddHiker(std::string name, double speed, const std::string& bridge);
-    int FastestHikerSpeed(const Bridge& bridge) const;
-    int HikerSpeed(const std::string& hiker) const;
     double GetTiming(DoubleMap& timings);
 
 private:
-    std::map<std::string, Hiker>::const_iterator FastestHiker(const Bridge& bridge) const;
-
-    std::map<std::string, Hiker> hikers_;
     std::vector<Bridge> bridges_;
     std::map<std::string, int> bridgeNameToIndex_;
 };
+
+} // TorchAndBridge
 
 #endif // __SIMULATOR_H__

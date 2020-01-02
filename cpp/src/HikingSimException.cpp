@@ -1,5 +1,8 @@
 #include "HikingSimException.h"
 
+namespace TorchAndBridge
+{
+
 BadConfigException::BadConfigException(const char* msg)
 {
     msg_.assign(msg);
@@ -20,3 +23,4 @@ char const * BadParameterException::what() const
     return msg_.c_str();
 }
 
+} // TorchAndBridge
