@@ -1,20 +1,22 @@
 Windows Build
 -----------------------------------------------------------------------
-Build with Visual Studio 2017 with Release/x64 configuration. Then run 
-test.bat from the command line.
+Build with Visual Studio using Release/x64 configuration. It's also
+possible to build with gradle (requires Visual Studio and Java JRE).
+gradlew.bat assembleRelease
+Then run test.bat from the command line.
 
 Linux Build
 -----------------------------------------------------------------------
-Build with gradle. It will detect and use gcc or clang compiler. Make
-sure the active compiler version supports C++11 (eg gcc 7). Then run
-test.sh. To build:
+Build with gradle. Requires Java JRE is also installed. It will detect
+and use gcc or clang compiler. Make sure the active compiler version
+supports C++11 (eg gcc 7). Then run test.sh. To build:
 ./gradlew assembleRelease
 
 Acknowledgment
 -----------------------------------------------------------------------
 yaml-cpp 0.62       https://github.com/jbeder/yaml-cpp
 googletest 1.8.1    https://github.com/google/googletest
-gradle 6.0.1        https://gradle.org/
+gradle 6.7.1        https://gradle.org/
 
 See "3rdParty Licenses" for complete license for above software.
 
