@@ -2,8 +2,10 @@ Windows Build
 -----------------------------------------------------------------------
 Build with Visual Studio using Release/x64 configuration. It's also
 possible to build with gradle (requires Visual Studio and Java JRE).
+Execute from the Native Tools Command Prompt:
 gradlew.bat assembleRelease
 Then run test.bat from the command line.
+Tested with Visual Studio 2017 community edition.
 
 Linux Build
 -----------------------------------------------------------------------
